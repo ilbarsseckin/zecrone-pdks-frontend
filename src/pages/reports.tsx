@@ -1,28 +1,28 @@
 import { useEffect, useState } from 'react'
 import Layout from '../components/Layout'
+import { getPlanFeatures } from '../api/index'
 
 type ReportTab = 'attendance' | 'monthly' | 'late' | 'leaves'
 
 export default function Reports() {
-  const [tab, setTab]           = useState<ReportTab>('attendance')
-  const [branches, setBranches] = useState<any[]>([])
+  const [tab, setTab]             = useState<ReportTab>('attendance')
+  const [branches, setBranches]   = useState<any[]>([])
   const [employees, setEmployees] = useState<any[]>([])
-  const [loading, setLoading]   = useState(true)
+  const [loading, setLoading]     = useState(true)
 
-  // Filtreler
   const now = new Date()
   const [branchId, setBranchId]     = useState('')
   const [employeeId, setEmployeeId] = useState('')
-  const [from, setFrom]   = useState(() => new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0])
-  const [to, setTo]       = useState(() => now.toISOString().split('T')[0])
+  const [from, setFrom] = useState(() => new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0])
+  const [to, setTo]     = useState(() => now.toISOString().split('T')[0])
   const [year, setYear]   = useState(now.getFullYear())
   const [month, setMonth] = useState(now.getMonth() + 1)
 
-  // Veri
-  const [preview, setPreview]           = useState<any[]>([])
-  const [lateStats, setLateStats]       = useState<any[]>([])
+  const [preview, setPreview]     = useState<any[]>([])
+  const [lateStats, setLateStats] = useState<any[]>([])
   const [previewLoading, setPreviewLoading] = useState(false)
 
+  const features = getPlanFeatures()
   const token   = () => localStorage.getItem('pdks_token') || ''
   const headers = () => ({ Authorization: `Bearer ${token()}` })
 
@@ -39,7 +39,11 @@ export default function Reports() {
     })
   }, [])
 
-  const downloadBlob = (url: string, filename: string) =>
+  const downloadBlob = (url: string, filename: string) => {
+    if (!features.canExportExcel) {
+      alert('Excel export özelliği Professional veya Enterprise planlarda kullanılabilir. Planınızı yükseltin.')
+      return
+    }
     fetch(url, { headers: headers() })
       .then(r => r.blob())
       .then(blob => {
@@ -48,6 +52,7 @@ export default function Reports() {
         a.download = filename
         a.click()
       })
+  }
 
   const downloadAttendanceExcel = () => {
     if (!branchId) { alert('Şube seçin'); return }
@@ -92,11 +97,25 @@ export default function Reports() {
     dt ? new Date(dt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) : '-'
 
   const TABS: { key: ReportTab; label: string; icon: string }[] = [
-    { key: 'attendance', label: 'Yoklama Raporu',   icon: '📊' },
-    { key: 'monthly',   label: 'Aylık Özet',        icon: '📅' },
-    { key: 'late',      label: 'Geç Kalma',         icon: '⏰' },
-    { key: 'leaves',    label: 'İzin Raporu',       icon: '🏖' },
+    { key: 'attendance', label: 'Yoklama Raporu', icon: '📊' },
+    { key: 'monthly',   label: 'Aylık Özet',     icon: '📅' },
+    { key: 'late',      label: 'Geç Kalma',      icon: '⏰' },
+    { key: 'leaves',    label: 'İzin Raporu',    icon: '🏖' },
   ]
+
+  const ExcelBtn = ({ onClick, label }: { onClick: () => void; label: string }) => (
+    <button onClick={onClick}
+      className={`px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 ${
+        features.canExportExcel
+          ? 'bg-green-600 text-white hover:bg-green-700'
+          : 'bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-800'
+      }`}>
+      {features.canExportExcel ? '📥' : '🔒'} {label}
+      {!features.canExportExcel && (
+        <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full ml-1">Pro</span>
+      )}
+    </button>
+  )
 
   return (
     <Layout>
@@ -105,11 +124,30 @@ export default function Reports() {
         <p className="text-sm text-gray-500">Excel formatında rapor indir</p>
       </div>
 
+      {!features.canExportExcel && (
+        <div className="mb-5 flex items-center justify-between bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl px-5 py-3">
+          <div className="flex items-center gap-3">
+            <span className="text-xl">🔒</span>
+            <div>
+              <div className="text-sm font-semibold text-amber-800 dark:text-amber-400">
+                Excel export Professional ve Enterprise planlarda kullanılabilir
+              </div>
+              <div className="text-xs text-amber-600 dark:text-amber-500">
+                Şu anki planınız: <strong>{features.plan || 'STARTER'}</strong>
+              </div>
+            </div>
+          </div>
+          <a href="/register"
+            className="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 whitespace-nowrap">
+            Planı Yükselt →
+          </a>
+        </div>
+      )}
+
       {loading ? (
         <div className="flex items-center justify-center h-64 text-gray-400">Yükleniyor...</div>
       ) : (
         <div className="flex gap-6">
-          {/* Sol — Tab menüsü */}
           <aside className="w-48 shrink-0">
             <nav className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
               {TABS.map(t => (
@@ -126,10 +164,8 @@ export default function Reports() {
             </nav>
           </aside>
 
-          {/* Sağ — İçerik */}
           <div className="flex-1 space-y-5">
 
-            {/* ── Yoklama Raporu ── */}
             {tab === 'attendance' && (
               <>
                 <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
@@ -158,16 +194,11 @@ export default function Reports() {
                       className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm hover:bg-gray-50 dark:hover:bg-gray-800">
                       Önizle
                     </button>
-                    <button onClick={downloadAttendanceExcel}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-medium">
-                      📥 Excel İndir
-                    </button>
+                    <ExcelBtn onClick={downloadAttendanceExcel} label="Excel İndir" />
                   </div>
                 </div>
 
-                {previewLoading && (
-                  <div className="text-center text-gray-400 py-8">Yükleniyor...</div>
-                )}
+                {previewLoading && <div className="text-center text-gray-400 py-8">Yükleniyor...</div>}
                 {!previewLoading && preview.length > 0 && (
                   <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
                     <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 text-sm font-semibold">
@@ -210,7 +241,6 @@ export default function Reports() {
               </>
             )}
 
-            {/* ── Aylık Özet ── */}
             {tab === 'monthly' && (
               <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
                 <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-1">Aylık Devam Özeti</h3>
@@ -242,14 +272,10 @@ export default function Reports() {
                     </select>
                   </div>
                 </div>
-                <button onClick={downloadMonthlySummary}
-                  className="px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 font-medium">
-                  📥 Excel İndir
-                </button>
+                <ExcelBtn onClick={downloadMonthlySummary} label="Excel İndir" />
               </div>
             )}
 
-            {/* ── Geç Kalma İstatistikleri ── */}
             {tab === 'late' && (
               <>
                 <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
@@ -280,9 +306,7 @@ export default function Reports() {
                   </button>
                 </div>
 
-                {previewLoading && (
-                  <div className="text-center text-gray-400 py-8">Hesaplanıyor...</div>
-                )}
+                {previewLoading && <div className="text-center text-gray-400 py-8">Hesaplanıyor...</div>}
                 {!previewLoading && lateStats.length > 0 && (
                   <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
                     <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 text-sm font-semibold">
@@ -317,29 +341,25 @@ export default function Reports() {
               </>
             )}
 
-            {/* ── İzin Raporu ── */}
             {tab === 'leaves' && (
               <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
                 <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-1">İzin Raporu</h3>
                 <p className="text-sm text-gray-500 mb-5">
-                  Tüm izin taleplerini (web + mobil) Excel olarak indir.
+                  Tüm izin taleplerini Excel olarak indir.
                 </p>
                 <div className="grid grid-cols-2 gap-4 mb-5">
                   <div>
-                    <label className="block text-sm font-medium mb-1">Başlangıç (opsiyonel)</label>
+                    <label className="block text-sm font-medium mb-1">Başlangıç</label>
                     <input type="date" value={from} onChange={e => setFrom(e.target.value)}
                       className="w-full border border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-lg px-3 py-2 text-sm" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">Bitiş (opsiyonel)</label>
+                    <label className="block text-sm font-medium mb-1">Bitiş</label>
                     <input type="date" value={to} onChange={e => setTo(e.target.value)}
                       className="w-full border border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-lg px-3 py-2 text-sm" />
                   </div>
                 </div>
-                <button onClick={downloadLeavesExcel}
-                  className="px-5 py-2.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-medium">
-                  📥 Excel İndir
-                </button>
+                <ExcelBtn onClick={downloadLeavesExcel} label="Excel İndir" />
               </div>
             )}
           </div>

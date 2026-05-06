@@ -50,7 +50,7 @@ export default function Layout({ children }: LayoutProps) {
         <aside className={`flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ${collapsed ? 'w-16' : 'w-56'}`}>
           <div className="flex items-center justify-between px-4 h-16 border-b border-gray-200 dark:border-gray-800">
             {!collapsed && (
-              <span className="font-bold text-lg text-blue-600 dark:text-blue-400">PDKS</span>
+              <span className="font-bold text-lg text-blue-600 dark:text-blue-400">Zecrone</span>
             )}
             <button
               onClick={() => setCollapsed(!collapsed)}

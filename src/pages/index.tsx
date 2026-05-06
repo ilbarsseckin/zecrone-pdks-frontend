@@ -53,7 +53,7 @@ export default function Login() {
         maxWidth: '400px',
         boxShadow: '0 2px 12px rgba(0,0,0,0.1)'
       }}>
-        <h1 style={{ marginBottom: '8px', fontSize: '24px' }}>PDKS</h1>
+        <h1 style={{ marginBottom: '8px', fontSize: '24px' }}>Zecrone</h1>
         <p style={{ color: '#666', marginBottom: '32px' }}>
           Personel Devam Kontrol Sistemi
         </p>
