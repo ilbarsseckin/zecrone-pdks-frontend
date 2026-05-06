@@ -9,8 +9,10 @@ const menuItems = [
   { href: '/attendance', label: 'Yoklama',    icon: '✅' },
   { href: '/shifts',     label: 'Vardiyalar', icon: '🔄' },
   { href: '/leaves',     label: 'İzin Takibi',icon: '📅' },
+  { href: '/overtime', label: 'Fazla Mesai', icon: '⏱️' },
   { href: '/reports',    label: 'Raporlar',   icon: '📈' },
   { href: '/settings',   label: 'Ayarlar',    icon: '⚙️' },
+  
 ]
 
 interface LayoutProps {
