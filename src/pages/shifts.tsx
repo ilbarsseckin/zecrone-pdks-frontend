@@ -39,7 +39,7 @@ export default function Shifts() {
   const load = (bid: string, ws: string) => {
     if (!bid) return
     const we = getWeekEnd(ws)
-    fetch(`http://localhost:8080/api/shifts?branchId=${bid}&from=${ws}&to=${we}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/shifts?branchId=${bid}&from=${ws}&to=${we}`, {
       headers: headers()
     }).then(r => r.json()).then(data => {
       setShifts(Array.isArray(data) ? data : [])
@@ -85,7 +85,7 @@ export default function Shifts() {
 
   const deleteShift = async (id: string) => {
     if (!confirm('Vardiyayı silmek istediğinize emin misiniz?')) return
-    await fetch(`http://localhost:8080/api/shifts/${id}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/shifts/${id}`, {
       method: 'DELETE', headers: headers()
     })
     load(branchId, weekStart)

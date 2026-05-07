@@ -83,7 +83,7 @@ export default function Login() {
           </form>
 
           <div className="mt-6 text-center">
-            <a href="/register" className="text-sm text-blue-400 hover:text-blue-300 transition">
+            <a href="/hr/register" className="text-sm text-blue-400 hover:text-blue-300 transition">
               Hesabınız yok mu? Ücretsiz deneyin →
             </a>
           </div>

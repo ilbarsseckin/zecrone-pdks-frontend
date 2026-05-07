@@ -66,7 +66,7 @@ export default function Branches() {
 
   const deleteBranch = async (id: string) => {
     if (!confirm('Şubeyi silmek istediğinize emin misiniz?')) return
-    await fetch(`http://localhost:8080/api/branches/${id}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches/${id}`, {
       method: 'DELETE', headers: { Authorization: `Bearer ${getToken()}` }
     })
     load()

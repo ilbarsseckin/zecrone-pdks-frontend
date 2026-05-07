@@ -1,0 +1,18 @@
+import os
+
+pages_dir = r'C:\pdks-saas\zecrone-pdks-frontend\src\pages'
+
+for root, dirs, files in os.walk(pages_dir):
+    for f in files:
+        if f.endswith('.tsx'):
+            path = os.path.join(root, f)
+            try:
+                with open(path, 'r', encoding='utf-8') as fp:
+                    content = fp.read()
+                old = "'${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}"
+                content = content.replace(old, 'http://localhost:8080')
+                with open(path, 'w', encoding='utf-8') as fp:
+                    fp.write(content)
+                print('Fixed:', path)
+            except Exception as e:
+                print('Error:', path, e)

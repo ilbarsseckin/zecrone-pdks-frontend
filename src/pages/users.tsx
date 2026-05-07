@@ -65,7 +65,7 @@ export default function Users() {
   }
 
   const toggleActive = async (id: string, current: boolean) => {
-    await fetch(`http://localhost:8080/api/users/${id}/status?active=${!current}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/users/${id}/status?active=${!current}`, {
       method: 'PATCH', headers: headers()
     })
     load()

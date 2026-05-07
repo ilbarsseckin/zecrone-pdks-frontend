@@ -50,7 +50,7 @@ export default function Overtime() {
   }
 
   const loadOvertimes = (bid: string, f: string, t: string) => {
-    fetch(`http://localhost:8080/api/overtime?branchId=${bid}&from=${f}&to=${t}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/overtime?branchId=${bid}&from=${f}&to=${t}`, {
       headers: headers()
     }).then(r => r.json()).then(data => {
       setOvertimes(Array.isArray(data) ? data : [])
@@ -82,14 +82,14 @@ export default function Overtime() {
   }
 
   const approve = async (id: string) => {
-    await fetch(`http://localhost:8080/api/overtime/${id}/approve`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/overtime/${id}/approve`, {
       method: 'PATCH', headers: headers()
     })
     loadOvertimes(branchId, from, to)
   }
 
   const reject = async (id: string) => {
-    await fetch(`http://localhost:8080/api/overtime/${id}/reject`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/overtime/${id}/reject`, {
       method: 'PATCH', headers: headers()
     })
     loadOvertimes(branchId, from, to)

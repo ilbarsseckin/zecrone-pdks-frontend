@@ -82,7 +82,7 @@ export default function Employees() {
 
   const setPassive = async (id: string) => {
     if (!confirm('Pasife almak istediğinize emin misiniz?')) return
-    await fetch(`http://localhost:8080/api/employees/${id}/status?status=PASSIVE`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees/${id}/status?status=PASSIVE`, {
       method: 'PATCH', headers: authHdr()
     })
     load()
@@ -92,7 +92,7 @@ export default function Employees() {
     if (!mobilePassModal) return
     if (mobilePassword.length < 6) { alert('Şifre en az 6 karakter olmalı'); return }
     const res = await fetch(
-      `http://localhost:8080/api/employees/${mobilePassModal.id}/set-mobile-password?password=${encodeURIComponent(mobilePassword)}`,
+      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees/${mobilePassModal.id}/set-mobile-password?password=${encodeURIComponent(mobilePassword)}`,
       { method: 'POST', headers: authHdr() }
     )
     if (res.ok) {

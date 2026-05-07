@@ -51,7 +51,7 @@ export default function Leaves() {
     setForm(f => ({ ...f, employeeId }))
     if (!employeeId) { setSelectedEmpBalance(null); return }
     const year = new Date().getFullYear()
-    const res  = await fetch(`http://localhost:8080/api/leaves/balance/${employeeId}?year=${year}`, { headers: headers() })
+    const res  = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/leaves/balance/${employeeId}?year=${year}`, { headers: headers() })
     if (res.ok) setSelectedEmpBalance(await res.json())
     else setSelectedEmpBalance(null)
   }
@@ -74,13 +74,13 @@ export default function Leaves() {
   }
 
   const approve = async (id: string) => {
-    await fetch(`http://localhost:8080/api/leaves/${id}/approve`, { method: 'PATCH', headers: headers() })
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/leaves/${id}/approve`, { method: 'PATCH', headers: headers() })
     load()
   }
 
   const reject = async () => {
     if (!rejectModal) return
-    await fetch(`http://localhost:8080/api/leaves/${rejectModal.id}/reject?note=${encodeURIComponent(rejectNote)}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/leaves/${rejectModal.id}/reject?note=${encodeURIComponent(rejectNote)}`, {
       method: 'PATCH', headers: headers(),
     })
     setRejectModal(null); setRejectNote(''); load()

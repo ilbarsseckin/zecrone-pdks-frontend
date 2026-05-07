@@ -57,7 +57,7 @@ export default function Reports() {
   const downloadAttendanceExcel = () => {
     if (!branchId) { alert('Şube seçin'); return }
     downloadBlob(
-      `http://localhost:8080/api/reports/attendance/excel?branchId=${branchId}&from=${from}&to=${to}`,
+      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/reports/attendance/excel?branchId=${branchId}&from=${from}&to=${to}`,
       `yoklama_${from}_${to}.xlsx`
     )
   }
@@ -65,14 +65,14 @@ export default function Reports() {
   const downloadMonthlySummary = () => {
     if (!branchId) { alert('Şube seçin'); return }
     downloadBlob(
-      `http://localhost:8080/api/reports/monthly-summary/excel?branchId=${branchId}&year=${year}&month=${month}`,
+      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/reports/monthly-summary/excel?branchId=${branchId}&year=${year}&month=${month}`,
       `ozet_${year}_${String(month).padStart(2, '0')}.xlsx`
     )
   }
 
   const downloadLeavesExcel = () => {
     downloadBlob(
-      `http://localhost:8080/api/reports/leaves/excel?from=${from}&to=${to}`,
+      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/reports/leaves/excel?from=${from}&to=${to}`,
       `izinler_${from}_${to}.xlsx`
     )
   }
@@ -80,7 +80,7 @@ export default function Reports() {
   const loadPreview = () => {
     if (!branchId) return
     setPreviewLoading(true)
-    fetch(`http://localhost:8080/api/attendance/daily?branchId=${branchId}&date=${to}`, { headers: headers() })
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/attendance/daily?branchId=${branchId}&date=${to}`, { headers: headers() })
       .then(r => r.json())
       .then(data => { setPreview(Array.isArray(data) ? data : []); setPreviewLoading(false) })
   }
@@ -88,7 +88,7 @@ export default function Reports() {
   const loadLateStats = () => {
     if (!branchId) return
     setPreviewLoading(true)
-    fetch(`http://localhost:8080/api/reports/late-stats?branchId=${branchId}&from=${from}&to=${to}`, { headers: headers() })
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/reports/late-stats?branchId=${branchId}&from=${from}&to=${to}`, { headers: headers() })
       .then(r => r.json())
       .then(data => { setLateStats(Array.isArray(data) ? data : []); setPreviewLoading(false) })
   }
@@ -137,7 +137,7 @@ export default function Reports() {
               </div>
             </div>
           </div>
-          <a href="/register"
+          <a href="/hr/register"
             className="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 whitespace-nowrap">
             Planı Yükselt →
           </a>
