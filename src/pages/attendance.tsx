@@ -19,48 +19,55 @@ interface AttendanceRecord {
 }
 
 export default function Attendance() {
-  const [employees, setEmployees] = useState<Employee[]>([])
+  const [employees, setEmployees]   = useState<Employee[]>([])
   const [attendance, setAttendance] = useState<AttendanceRecord[]>([])
-  const [loading, setLoading] = useState(true)
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0])
-  const [branchId] = useState('2596ea1a-442e-4b45-a9a2-13e0e44fb976')
+  const [loading, setLoading]       = useState(true)
+  const [date, setDate]             = useState(new Date().toISOString().split('T')[0])
+  const [branchId, setBranchId]     = useState('')
 
   const getToken = () => localStorage.getItem('pdks_token') || ''
+  const h        = () => ({ Authorization: `Bearer ${getToken()}` })
 
-  const load = (selectedDate: string) => {
-    const h = { Authorization: `Bearer ${getToken()}` }
+  const loadAttendance = (bid: string, selectedDate: string) => {
+    if (!bid) return
     Promise.all([
-      fetch('http://localhost:8080/api/employees', { headers: h }).then(r => r.json()),
-      fetch(`http://localhost:8080/api/attendance/daily?branchId=${branchId}&date=${selectedDate}`, { headers: h }).then(r => r.json()),
+      fetch('http://localhost:8080/api/employees', { headers: h() }).then(r => r.json()),
+      fetch(`http://localhost:8080/api/attendance/daily?branchId=${bid}&date=${selectedDate}`, { headers: h() }).then(r => r.json()),
     ]).then(([emps, att]) => {
-      setEmployees(emps)
-      setAttendance(att)
+      setEmployees(Array.isArray(emps) ? emps : [])
+      setAttendance(Array.isArray(att)  ? att  : [])
       setLoading(false)
     })
   }
 
   useEffect(() => {
     if (!localStorage.getItem('pdks_token')) { window.location.href = '/'; return }
-    load(date)
+    // Önce şubeleri çek, ilk şubeyi al
+    fetch('http://localhost:8080/api/branches', { headers: h() })
+      .then(r => r.json())
+      .then(brs => {
+        if (!Array.isArray(brs) || brs.length === 0) { setLoading(false); return }
+        const bid = brs[0].id
+        setBranchId(bid)
+        loadAttendance(bid, date)
+      })
   }, [])
 
   const handleCheckIn = async (employeeId: string) => {
     const res = await fetch(`http://localhost:8080/api/attendance/check-in?employeeId=${employeeId}`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${getToken()}` }
+      method: 'POST', headers: h()
     })
     const d = await res.json()
-    if (res.ok) load(date)
+    if (res.ok) loadAttendance(branchId, date)
     else alert(d.error)
   }
 
   const handleCheckOut = async (employeeId: string) => {
     const res = await fetch(`http://localhost:8080/api/attendance/check-out?employeeId=${employeeId}`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${getToken()}` }
+      method: 'POST', headers: h()
     })
     const d = await res.json()
-    if (res.ok) load(date)
+    if (res.ok) loadAttendance(branchId, date)
     else alert(d.error)
   }
 
@@ -72,9 +79,7 @@ export default function Attendance() {
 
   const formatDuration = (minutes: number) => {
     if (!minutes) return '-'
-    const h = Math.floor(minutes / 60)
-    const m = minutes % 60
-    return `${h}s ${m}dk`
+    return `${Math.floor(minutes / 60)}s ${minutes % 60}dk`
   }
 
   const stats = {
@@ -95,10 +100,8 @@ export default function Attendance() {
                 <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">Yoklama</h2>
                 <p className="text-sm text-gray-500 mt-0.5">Günlük giriş/çıkış takibi</p>
               </div>
-              <input
-                type="date"
-                value={date}
-                onChange={e => { setDate(e.target.value); load(e.target.value) }}
+              <input type="date" value={date}
+                onChange={e => { setDate(e.target.value); loadAttendance(branchId, e.target.value) }}
                 className="border border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-lg px-3 py-2 text-sm"
               />
             </div>
@@ -132,7 +135,13 @@ export default function Attendance() {
                   </tr>
                 </thead>
                 <tbody>
-                  {employees.map(emp => {
+                  {employees.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="px-6 py-8 text-center text-gray-400">
+                        Personel bulunamadı
+                      </td>
+                    </tr>
+                  ) : employees.map(emp => {
                     const record = getRecord(emp.id)
                     return (
                       <tr key={emp.id} className="border-t border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
@@ -159,17 +168,13 @@ export default function Attendance() {
                         <td className="px-6 py-4">
                           <div className="flex gap-2">
                             {!record ? (
-                              <button
-                                onClick={() => handleCheckIn(emp.id)}
-                                className="px-3 py-1 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700"
-                              >
+                              <button onClick={() => handleCheckIn(emp.id)}
+                                className="px-3 py-1 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700">
                                 Giriş
                               </button>
                             ) : !record.checkOut ? (
-                              <button
-                                onClick={() => handleCheckOut(emp.id)}
-                                className="px-3 py-1 bg-gray-600 text-white text-xs rounded-lg hover:bg-gray-700"
-                              >
+                              <button onClick={() => handleCheckOut(emp.id)}
+                                className="px-3 py-1 bg-gray-600 text-white text-xs rounded-lg hover:bg-gray-700">
                                 Çıkış
                               </button>
                             ) : (

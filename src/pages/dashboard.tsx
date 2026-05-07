@@ -22,7 +22,7 @@ export default function Dashboard() {
     fetch('http://localhost:8080/api/branches', { headers: h })
       .then(r => r.json())
       .then(branches => {
-        if (!branches || branches.length === 0) { setLoading(false); return }
+        if (!branches || !Array.isArray(branches) || branches.length === 0) { setLoading(false); return }
         const branchId = branches[0].id
         Promise.all([
           fetch('http://localhost:8080/api/employees', { headers: h }).then(r => r.json()),

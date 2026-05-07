@@ -32,9 +32,9 @@ export default function Reports() {
       fetch('http://localhost:8080/api/branches',  { headers: headers() }).then(r => r.json()),
       fetch('http://localhost:8080/api/employees', { headers: headers() }).then(r => r.json()),
     ]).then(([brs, emps]) => {
-      setBranches(brs)
-      setEmployees(emps)
-      if (brs.length > 0) setBranchId(brs[0].id)
+      setBranches(Array.isArray(brs) ? brs : [])
+      setEmployees(Array.isArray(emps) ? emps : [])
+      if (Array.isArray(brs) && brs.length > 0) setBranchId(brs[0].id)
       setLoading(false)
     })
   }, [])
@@ -82,7 +82,7 @@ export default function Reports() {
     setPreviewLoading(true)
     fetch(`http://localhost:8080/api/attendance/daily?branchId=${branchId}&date=${to}`, { headers: headers() })
       .then(r => r.json())
-      .then(data => { setPreview(data); setPreviewLoading(false) })
+      .then(data => { setPreview(Array.isArray(data) ? data : []); setPreviewLoading(false) })
   }
 
   const loadLateStats = () => {
@@ -90,7 +90,7 @@ export default function Reports() {
     setPreviewLoading(true)
     fetch(`http://localhost:8080/api/reports/late-stats?branchId=${branchId}&from=${from}&to=${to}`, { headers: headers() })
       .then(r => r.json())
-      .then(data => { setLateStats(data); setPreviewLoading(false) })
+      .then(data => { setLateStats(Array.isArray(data) ? data : []); setPreviewLoading(false) })
   }
 
   const formatTime = (dt: string) =>
