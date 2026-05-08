@@ -92,8 +92,8 @@ export default function SuperAdminDashboard() {
 
   const load = () => {
     Promise.all([
-      fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/superadmin/stats',   { headers: headers() }).then(r => r.json()),
-      fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/superadmin/tenants', { headers: headers() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/superadmin/stats',   { headers: headers() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/superadmin/tenants', { headers: headers() }).then(r => r.json()),
     ]).then(([s, t]) => {
       setStats(s)
       setTenants(Array.isArray(t) ? t : [])
@@ -102,12 +102,12 @@ export default function SuperAdminDashboard() {
   }
 
   const loadAdmins = () => {
-    fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/superadmin/admins', { headers: headers() })
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/superadmin/admins', { headers: headers() })
       .then(r => r.json()).then(data => setAdmins(Array.isArray(data) ? data : []))
   }
 
   const toggleActive = async (id: string, isActive: boolean) => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/superadmin/tenants/${id}/${isActive ? 'deactivate' : 'activate'}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/superadmin/tenants/${id}/${isActive ? 'deactivate' : 'activate'}`, {
       method: 'PATCH', headers: headers()
     })
     load()
@@ -115,7 +115,7 @@ export default function SuperAdminDashboard() {
 
   const changePlan = async () => {
     if (!planModal || !selectedPlan) return
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/superadmin/tenants/${planModal.id}/plan?plan=${selectedPlan}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/superadmin/tenants/${planModal.id}/plan?plan=${selectedPlan}`, {
       method: 'PATCH', headers: headers()
     })
     setPlanModal(null); load()
@@ -127,7 +127,7 @@ export default function SuperAdminDashboard() {
     if (endsAt)      params.append('endsAt', endsAt)
     if (trialEndsAt) params.append('trialEndsAt', trialEndsAt)
     if (notes)       params.append('notes', notes)
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/superadmin/tenants/${subModal.id}/subscription?${params}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/superadmin/tenants/${subModal.id}/subscription?${params}`, {
       method: 'PATCH', headers: headers()
     })
     setSubModal(null); load()
@@ -135,7 +135,7 @@ export default function SuperAdminDashboard() {
 
   const createAdmin = async () => {
     if (!newAdminEmail || !newAdminPass) return
-    const res = await fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/superadmin/admins', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/superadmin/admins', {
       method: 'POST',
       headers: { ...headers(), 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: newAdminEmail, password: newAdminPass })
@@ -152,7 +152,7 @@ export default function SuperAdminDashboard() {
 
   const deleteAdmin = async (id: string) => {
     if (!confirm('Bu admini silmek istediğinize emin misiniz?')) return
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/superadmin/admins/${id}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/superadmin/admins/${id}`, {
       method: 'DELETE', headers: headers()
     })
     loadAdmins()

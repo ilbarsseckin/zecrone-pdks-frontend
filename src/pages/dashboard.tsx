@@ -19,14 +19,14 @@ export default function Dashboard() {
     const today = new Date().toISOString().split('T')[0]
     const h = { Authorization: `Bearer ${token}` }
 
-    fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches', { headers: h })
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches', { headers: h })
       .then(r => r.json())
       .then(branches => {
         if (!branches || !Array.isArray(branches) || branches.length === 0) { setLoading(false); return }
         const branchId = branches[0].id
         Promise.all([
-          fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: h }).then(r => r.json()),
-          fetch(`${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/attendance/daily?branchId=${branchId}&date=${today}`, { headers: h }).then(r => r.json()),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: h }).then(r => r.json()),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/attendance/daily?branchId=${branchId}&date=${today}`, { headers: h }).then(r => r.json()),
         ]).then(([employees, attendance]) => {
           const att  = Array.isArray(attendance) ? attendance : []
           const emps = Array.isArray(employees)  ? employees  : []

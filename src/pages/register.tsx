@@ -68,7 +68,7 @@ export default function Register() {
     if (form.adminPassword !== passwordConfirm) { setError('Şifreler eşleşmiyor'); return }
     setLoading(true)
     try {
-      const res = await fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/tenants', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/tenants', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

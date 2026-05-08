@@ -38,8 +38,8 @@ export default function Attendance() {
   const loadAttendance = (bid: string, selectedDate: string) => {
     if (!bid) return
     Promise.all([
-      fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: h() }).then(r => r.json()),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/attendance/daily?branchId=${bid}&date=${selectedDate}`, { headers: h() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: h() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/attendance/daily?branchId=${bid}&date=${selectedDate}`, { headers: h() }).then(r => r.json()),
     ]).then(([emps, att]) => {
       setEmployees(Array.isArray(emps) ? emps : [])
       setAttendance(Array.isArray(att)  ? att  : [])
@@ -49,7 +49,7 @@ export default function Attendance() {
 
   useEffect(() => {
     if (!localStorage.getItem('pdks_token')) { window.location.href = '/'; return }
-    fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches', { headers: h() })
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches', { headers: h() })
       .then(r => r.json())
       .then(brs => {
         if (!Array.isArray(brs) || brs.length === 0) { setLoading(false); return }
@@ -60,7 +60,7 @@ export default function Attendance() {
   }, [])
 
   const handleCheckIn = async (employeeId: string) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/attendance/check-in?employeeId=${employeeId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/attendance/check-in?employeeId=${employeeId}`, {
       method: 'POST', headers: h()
     })
     const d = await res.json()
@@ -69,7 +69,7 @@ export default function Attendance() {
   }
 
   const handleCheckOut = async (employeeId: string) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/attendance/check-out?employeeId=${employeeId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/attendance/check-out?employeeId=${employeeId}`, {
       method: 'POST', headers: h()
     })
     const d = await res.json()
@@ -90,7 +90,7 @@ export default function Attendance() {
   const saveEdit = async () => {
     if (!editModal) return
     setEditSaving(true)
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/attendance/${editModal.id}/edit`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/attendance/${editModal.id}/edit`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', ...h() },
       body: JSON.stringify(editForm)

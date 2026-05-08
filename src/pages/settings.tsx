@@ -21,7 +21,7 @@ export default function Settings() {
 
   useEffect(() => {
     if (!localStorage.getItem('pdks_token')) { window.location.href = '/'; return }
-    fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/tenants/me', { headers: headers() })
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/tenants/me', { headers: headers() })
       .then(r => r.json())
       .then(data => {
         setProfile({
@@ -36,7 +36,7 @@ export default function Settings() {
   const saveProfile = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    const res = await fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/tenants/me', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/tenants/me', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', ...headers() },
       body: JSON.stringify({
@@ -59,7 +59,7 @@ export default function Settings() {
     if (password.newPass !== password.confirm) { setPwError('Yeni şifreler eşleşmiyor'); return }
     if (password.newPass.length < 8) { setPwError('Şifre en az 8 karakter olmalı'); return }
 
-    const res = await fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/auth/change-password', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/auth/change-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...headers() },
       body: JSON.stringify({

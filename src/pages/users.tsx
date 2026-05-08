@@ -23,9 +23,9 @@ export default function Users() {
 
   const load = () => {
     Promise.all([
-      fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/users', { headers: headers() }).then(r => r.json()),
-      fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: headers() }).then(r => r.json()),
-      fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches', { headers: headers() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/users', { headers: headers() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: headers() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches', { headers: headers() }).then(r => r.json()),
     ]).then(([u, e, b]) => {
       setUsers(Array.isArray(u) ? u : [])
       setEmployees(Array.isArray(e) ? e : [])
@@ -49,7 +49,7 @@ export default function Users() {
     if (form.branchId) body.branchId = form.branchId
     if (form.employeeId) body.employeeId = form.employeeId
 
-    const res = await fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/users', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...headers() },
       body: JSON.stringify(body)
@@ -65,7 +65,7 @@ export default function Users() {
   }
 
   const toggleActive = async (id: string, current: boolean) => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/users/${id}/status?active=${!current}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/users/${id}/status?active=${!current}`, {
       method: 'PATCH', headers: headers()
     })
     load()
