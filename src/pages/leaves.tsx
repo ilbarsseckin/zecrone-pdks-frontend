@@ -33,8 +33,8 @@ export default function Leaves() {
 
   const load = () => {
     Promise.all([
-      fetch('h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/leaves',    { headers: headers() }).then(r => r.json()),
-      fetch('h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: headers() }).then(r => r.json()),
+      fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/leaves',    { headers: headers() }).then(r => r.json()),
+      fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: headers() }).then(r => r.json()),
     ]).then(([lv, emps]) => {
       setLeaves(Array.isArray(lv) ? lv : [])
       setEmployees(Array.isArray(emps) ? emps : [])
@@ -51,7 +51,7 @@ export default function Leaves() {
     setForm(f => ({ ...f, employeeId }))
     if (!employeeId) { setSelectedEmpBalance(null); return }
     const year = new Date().getFullYear()
-    const res  = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/leaves/balance/${employeeId}?year=${year}`, { headers: headers() })
+    const res  = await fetch(`${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/leaves/balance/${employeeId}?year=${year}`, { headers: headers() })
     if (res.ok) setSelectedEmpBalance(await res.json())
     else setSelectedEmpBalance(null)
   }
@@ -59,7 +59,7 @@ export default function Leaves() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitError('')
-    const res = await fetch('h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/leaves', {
+    const res = await fetch('${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/leaves', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...headers() },
       body: JSON.stringify(form),
@@ -74,13 +74,13 @@ export default function Leaves() {
   }
 
   const approve = async (id: string) => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/leaves/${id}/approve`, { method: 'PATCH', headers: headers() })
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/leaves/${id}/approve`, { method: 'PATCH', headers: headers() })
     load()
   }
 
   const reject = async () => {
     if (!rejectModal) return
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/leaves/${rejectModal.id}/reject?note=${encodeURIComponent(rejectNote)}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/leaves/${rejectModal.id}/reject?note=${encodeURIComponent(rejectNote)}`, {
       method: 'PATCH', headers: headers(),
     })
     setRejectModal(null); setRejectNote(''); load()

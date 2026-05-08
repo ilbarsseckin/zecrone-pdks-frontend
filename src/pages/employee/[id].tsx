@@ -40,10 +40,10 @@ export default function EmployeeProfile() {
 
   const loadAll = () => {
     Promise.all([
-      fetch(`h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees/${id}`, { headers: h() }).then(r => r.json()),
-      fetch(`h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/leaves/employee/${id}`, { headers: h() }).then(r => r.json()),
-      fetch(`h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/attendance/monthly?employeeId=${id}&year=${year}&month=${month}`, { headers: h() }).then(r => r.json()),
-      fetch(`h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/leaves/balance/${id}?year=${year}`, { headers: h() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees/${id}`, { headers: h() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/leaves/employee/${id}`, { headers: h() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/attendance/monthly?employeeId=${id}&year=${year}&month=${month}`, { headers: h() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/leaves/balance/${id}?year=${year}`, { headers: h() }).then(r => r.json()),
     ]).then(([empData, leavesData, attData, balData]) => {
       setEmp(empData)
       setForm({
@@ -59,7 +59,7 @@ export default function EmployeeProfile() {
       setAttendance(Array.isArray(attData) ? attData : [])
       setBalance(balData)
       if (empData.branchId) {
-        fetch(`h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches/${empData.branchId}`, { headers: h() })
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches/${empData.branchId}`, { headers: h() })
           .then(r => r.json()).then(setBranch)
       }
       setLoading(false)
@@ -68,7 +68,7 @@ export default function EmployeeProfile() {
 
   const save = async () => {
     setSaving(true)
-    const res = await fetch(`h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', ...h() },
       body: JSON.stringify({ ...form, branchId: emp.branchId })
@@ -80,7 +80,7 @@ export default function EmployeeProfile() {
 
   const saveRfCard = async () => {
     setRfSaving(true)
-    const res = await fetch(`h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees/${id}/rf-card?cardId=${encodeURIComponent(rfCardInput)}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees/${id}/rf-card?cardId=${encodeURIComponent(rfCardInput)}`, {
       method: 'PATCH', headers: h()
     })
     if (res.ok) {
@@ -95,7 +95,7 @@ export default function EmployeeProfile() {
   const regenerateQr = async () => {
     if (!confirm('QR kodu yenilenecek. Eski QR kod geçersiz olacak. Devam edilsin mi?')) return
     setQrRegenerating(true)
-    const res = await fetch(`h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees/${id}/regenerate-qr`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees/${id}/regenerate-qr`, {
       method: 'PATCH', headers: h()
     })
     if (res.ok) { const updated = await res.json(); setEmp(updated) }

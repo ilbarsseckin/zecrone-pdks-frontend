@@ -9,8 +9,8 @@ for root, dirs, files in os.walk(pages_dir):
             try:
                 with open(path, 'r', encoding='utf-8') as fp:
                     content = fp.read()
-                old = "'${process.env.NEXT_PUBLIC_API_URL || 'h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}"
-                content = content.replace(old, 'h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}')
+                old = "'${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}"
+                content = content.replace(old, '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}')
                 with open(path, 'w', encoding='utf-8') as fp:
                     fp.write(content)
                 print('Fixed:', path)
