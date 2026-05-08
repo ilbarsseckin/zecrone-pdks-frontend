@@ -39,7 +39,7 @@ export default function Shifts() {
   const load = (bid: string, ws: string) => {
     if (!bid) return
     const we = getWeekEnd(ws)
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/shifts?branchId=${bid}&from=${ws}&to=${we}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/shifts?branchId=${bid}&from=${ws}&to=${we}`, {
       headers: headers()
     }).then(r => r.json()).then(data => {
       setShifts(Array.isArray(data) ? data : [])
@@ -50,8 +50,8 @@ export default function Shifts() {
   useEffect(() => {
     if (!localStorage.getItem('pdks_token')) { window.location.href = '/'; return }
     Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches', { headers: headers() }).then(r => r.json()),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: headers() }).then(r => r.json()),
+      fetch('http://localhost:8080/api/branches', { headers: headers() }).then(r => r.json()),
+      fetch('http://localhost:8080/api/employees', { headers: headers() }).then(r => r.json()),
     ]).then(([brs, emps]) => {
       setBranches(Array.isArray(brs) ? brs : [])
       setEmployees(Array.isArray(emps) ? emps : [])
@@ -68,7 +68,7 @@ export default function Shifts() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitError('')
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/shifts', {
+    const res = await fetch('http://localhost:8080/api/shifts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...headers() },
       body: JSON.stringify(form)
@@ -85,7 +85,7 @@ export default function Shifts() {
 
   const deleteShift = async (id: string) => {
     if (!confirm('Vardiyayı silmek istediğinize emin misiniz?')) return
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/shifts/${id}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/shifts/${id}`, {
       method: 'DELETE', headers: headers()
     })
     load(branchId, weekStart)

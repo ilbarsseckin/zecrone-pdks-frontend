@@ -35,8 +35,8 @@ export default function Overtime() {
   const load = () => {
     const h = { Authorization: `Bearer ${token()}` }
     Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: h }).then(r => r.json()),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches',  { headers: h }).then(r => r.json()),
+      fetch('http://localhost:8080/api/employees', { headers: h }).then(r => r.json()),
+      fetch('http://localhost:8080/api/branches',  { headers: h }).then(r => r.json()),
     ]).then(([emps, brs]) => {
       setEmployees(Array.isArray(emps) ? emps : [])
       setBranches(Array.isArray(brs)  ? brs  : [])
@@ -50,7 +50,7 @@ export default function Overtime() {
   }
 
   const loadOvertimes = (bid: string, f: string, t: string) => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/overtime?branchId=${bid}&from=${f}&to=${t}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/overtime?branchId=${bid}&from=${f}&to=${t}`, {
       headers: headers()
     }).then(r => r.json()).then(data => {
       setOvertimes(Array.isArray(data) ? data : [])
@@ -66,7 +66,7 @@ export default function Overtime() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitError('')
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/overtime', {
+    const res = await fetch('http://localhost:8080/api/overtime', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...headers() },
       body: JSON.stringify(form)
@@ -82,14 +82,14 @@ export default function Overtime() {
   }
 
   const approve = async (id: string) => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/overtime/${id}/approve`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/overtime/${id}/approve`, {
       method: 'PATCH', headers: headers()
     })
     loadOvertimes(branchId, from, to)
   }
 
   const reject = async (id: string) => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/overtime/${id}/reject`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/overtime/${id}/reject`, {
       method: 'PATCH', headers: headers()
     })
     loadOvertimes(branchId, from, to)

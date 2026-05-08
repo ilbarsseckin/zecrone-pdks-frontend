@@ -42,8 +42,8 @@ export default function Employees() {
 
   const load = () => {
     Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: authHdr() }).then(r => r.json()),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches',  { headers: authHdr() }).then(r => r.json()),
+      fetch('http://localhost:8080/api/employees', { headers: authHdr() }).then(r => r.json()),
+      fetch('http://localhost:8080/api/branches',  { headers: authHdr() }).then(r => r.json()),
     ]).then(([emps, brs]) => {
       setEmployees(Array.isArray(emps) ? emps : [])
       setBranches(Array.isArray(brs)  ? brs  : [])
@@ -58,7 +58,7 @@ export default function Employees() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', {
+    const res = await fetch('http://localhost:8080/api/employees', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...authHdr() },
       body: JSON.stringify(form)
@@ -82,7 +82,7 @@ export default function Employees() {
 
   const setPassive = async (id: string) => {
     if (!confirm('Pasife almak istediğinize emin misiniz?')) return
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/employees/${id}/status?status=PASSIVE`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees/${id}/status?status=PASSIVE`, {
       method: 'PATCH', headers: authHdr()
     })
     load()
@@ -92,7 +92,7 @@ export default function Employees() {
     if (!mobilePassModal) return
     if (mobilePassword.length < 6) { alert('Şifre en az 6 karakter olmalı'); return }
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/employees/${mobilePassModal.id}/set-mobile-password?password=${encodeURIComponent(mobilePassword)}`,
+      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees/${mobilePassModal.id}/set-mobile-password?password=${encodeURIComponent(mobilePassword)}`,
       { method: 'POST', headers: authHdr() }
     )
     if (res.ok) {
