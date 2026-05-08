@@ -117,7 +117,7 @@ export default function Register() {
           </div>
           <span style={{ fontWeight: 800, fontSize: 20, color: '#0f172a' }}>Zecrone</span>
         </div>
-        <a href="/" style={{
+        <a href="/login" style={{
           fontSize: 13, fontWeight: 600, color: '#2563eb',
           textDecoration: 'none', padding: '7px 14px',
           border: '1px solid #2563eb', borderRadius: 8,
