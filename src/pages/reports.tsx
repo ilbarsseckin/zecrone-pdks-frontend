@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Layout from '../components/Layout'
-import { getPlanFeatures } from '../api/index'
+import { getPlanFeatures } from '../api/index`
 
 type ReportTab = 'attendance' | 'monthly' | 'late' | 'leaves'
 
@@ -29,8 +29,8 @@ export default function Reports() {
   useEffect(() => {
     if (!localStorage.getItem('pdks_token')) { window.location.href = '/'; return }
     Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches',  { headers: headers() }).then(r => r.json()),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: headers() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches`,  { headers: headers() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees`, { headers: headers() }).then(r => r.json()),
     ]).then(([brs, emps]) => {
       setBranches(Array.isArray(brs) ? brs : [])
       setEmployees(Array.isArray(emps) ? emps : [])

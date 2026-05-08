@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Layout from '../components/Layout'
 import { useRouter } from 'next/router'
-import { getPlanFeatures } from '../api/index'
+import { getPlanFeatures } from '../api/index`
 
 interface Employee {
   id: string
@@ -42,8 +42,8 @@ export default function Employees() {
 
   const load = () => {
     Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: authHdr() }).then(r => r.json()),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches',  { headers: authHdr() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees`, { headers: authHdr() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches`,  { headers: authHdr() }).then(r => r.json()),
     ]).then(([emps, brs]) => {
       setEmployees(Array.isArray(emps) ? emps : [])
       setBranches(Array.isArray(brs)  ? brs  : [])
@@ -58,7 +58,7 @@ export default function Employees() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...authHdr() },
       body: JSON.stringify(form)
