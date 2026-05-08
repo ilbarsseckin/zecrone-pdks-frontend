@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Layout from '../components/Layout'
-import { getPlanFeatures } from '../api/index`
+import { getPlanFeatures } from '../api/index'
 
 export default function Dashboard() {
   const [stats, setStats] = useState({

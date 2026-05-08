@@ -107,7 +107,7 @@ export default function SuperAdminDashboard() {
   }
 
   const toggleActive = async (id: string, isActive: boolean) => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/superadmin/tenants/${id}/${isActive ? `deactivate' : 'activate'}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/superadmin/tenants/${id}/${isActive ? 'deactivate' : 'activate'}`, {
       method: 'PATCH', headers: headers()
     })
     load()

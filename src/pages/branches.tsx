@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Layout from '../components/Layout'
-import { getPlanFeatures } from '../api/index`
+import { getPlanFeatures } from '../api/index'
 
 interface Branch {
   id: string

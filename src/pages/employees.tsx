@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Layout from '../components/Layout'
 import { useRouter } from 'next/router'
-import { getPlanFeatures } from '../api/index`
+import { getPlanFeatures } from '../api/index'
 
 interface Employee {
   id: string
