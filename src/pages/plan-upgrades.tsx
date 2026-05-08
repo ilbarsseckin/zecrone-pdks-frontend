@@ -53,8 +53,8 @@ export default function PlanUpgrades() {
 
   const load = () => {
     Promise.all([
-      fetch('http://localhost:8080/api/tenants/me',           { headers: headers() }).then(r => r.json()),
-      fetch('http://localhost:8080/api/plan-upgrades/my',     { headers: headers() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/tenants/me',           { headers: headers() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/plan-upgrades/my',     { headers: headers() }).then(r => r.json()),
     ]).then(([tenant, reqs]) => {
       setMyTenant(tenant)
       setMyRequests(reqs)
@@ -72,7 +72,7 @@ export default function PlanUpgrades() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitting(true)
-    const res = await fetch('http://localhost:8080/api/plan-upgrades', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/plan-upgrades', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...headers() },
       body: JSON.stringify(form),

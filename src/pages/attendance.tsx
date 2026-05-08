@@ -38,7 +38,7 @@ export default function Attendance() {
   const loadAttendance = (bid: string, selectedDate: string) => {
     if (!bid) return
     Promise.all([
-      fetch('http://localhost:8080/api/employees', { headers: h() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: h() }).then(r => r.json()),
       fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/attendance/daily?branchId=${bid}&date=${selectedDate}`, { headers: h() }).then(r => r.json()),
     ]).then(([emps, att]) => {
       setEmployees(Array.isArray(emps) ? emps : [])
@@ -49,7 +49,7 @@ export default function Attendance() {
 
   useEffect(() => {
     if (!localStorage.getItem('pdks_token')) { window.location.href = '/'; return }
-    fetch('http://localhost:8080/api/branches', { headers: h() })
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches', { headers: h() })
       .then(r => r.json())
       .then(brs => {
         if (!Array.isArray(brs) || brs.length === 0) { setLoading(false); return }
