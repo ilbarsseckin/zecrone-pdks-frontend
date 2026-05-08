@@ -29,8 +29,8 @@ export default function Reports() {
   useEffect(() => {
     if (!localStorage.getItem('pdks_token')) { window.location.href = '/'; return }
     Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches',  { headers: headers() }).then(r => r.json()),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees', { headers: headers() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches`,  { headers: headers() }).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/employees`, { headers: headers() }).then(r => r.json()),
     ]).then(([brs, emps]) => {
       setBranches(Array.isArray(brs) ? brs : [])
       setEmployees(Array.isArray(emps) ? emps : [])
@@ -57,7 +57,7 @@ export default function Reports() {
   const downloadAttendanceExcel = () => {
     if (!branchId) { alert('Şube seçin'); return }
     downloadBlob(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/reports/attendance/excel?branchId=${branchId}&from=${from}&to=${to}`,
+      `http://localhost:8080/api/reports/attendance/excel?branchId=${branchId}&from=${from}&to=${to}`,
       `yoklama_${from}_${to}.xlsx`
     )
   }
@@ -65,14 +65,14 @@ export default function Reports() {
   const downloadMonthlySummary = () => {
     if (!branchId) { alert('Şube seçin'); return }
     downloadBlob(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/reports/monthly-summary/excel?branchId=${branchId}&year=${year}&month=${month}`,
+      `http://localhost:8080/api/reports/monthly-summary/excel?branchId=${branchId}&year=${year}&month=${month}`,
       `ozet_${year}_${String(month).padStart(2, '0')}.xlsx`
     )
   }
 
   const downloadLeavesExcel = () => {
     downloadBlob(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/reports/leaves/excel?from=${from}&to=${to}`,
+      `http://localhost:8080/api/reports/leaves/excel?from=${from}&to=${to}`,
       `izinler_${from}_${to}.xlsx`
     )
   }
@@ -137,7 +137,7 @@ export default function Reports() {
               </div>
             </div>
           </div>
-          <a href="/hr/register"
+          <a href="/register"
             className="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 whitespace-nowrap">
             Planı Yükselt →
           </a>

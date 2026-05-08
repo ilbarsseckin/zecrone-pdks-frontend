@@ -1,7 +1,3 @@
-export const API_URL = typeof window !== 'undefined' 
-  ? (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080')
-  : 'http://localhost:8080'
-  
 import axios from 'axios';
 
 const isBrowser = typeof window !== 'undefined';
