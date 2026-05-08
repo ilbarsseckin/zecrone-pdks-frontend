@@ -1,13 +1,13 @@
-export const API_URL = typeof window !== 'undefined' 
-  ? (process.env.NEXT_PUBLIC_API_URL || 'h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}')
-  : 'h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'
-  
+export const API_URL = typeof window !== 'undefined'
+  ? (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080')
+  : 'http://localhost:8080'
+
 import axios from 'axios';
 
 const isBrowser = typeof window !== 'undefined';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080',
   headers: { 'Content-Type': 'application/json' },
 });
 
