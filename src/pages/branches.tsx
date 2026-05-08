@@ -27,7 +27,7 @@ export default function Branches() {
   const getToken = () => localStorage.getItem('pdks_token') || ''
 
   const load = () => {
-    fetch('http://localhost:8080/api/branches', {
+    fetch('h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches', {
       headers: { Authorization: `Bearer ${getToken()}` }
     }).then(r => r.json()).then(data => {
       setBranches(Array.isArray(data) ? data : [])
@@ -50,7 +50,7 @@ export default function Branches() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const res = await fetch('http://localhost:8080/api/branches', {
+    const res = await fetch('h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
       body: JSON.stringify(form)
@@ -66,7 +66,7 @@ export default function Branches() {
 
   const deleteBranch = async (id: string) => {
     if (!confirm('Şubeyi silmek istediğinize emin misiniz?')) return
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/branches/${id}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'h${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}'}/api/branches/${id}`, {
       method: 'DELETE', headers: { Authorization: `Bearer ${getToken()}` }
     })
     load()
