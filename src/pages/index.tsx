@@ -119,12 +119,12 @@ export default function Landing() {
               textDecoration: 'none',
             }}>{item}</a>
           ))}
-          <a href="/hr/login" style={{
+          <a href="/login" style={{
             fontSize: 14, fontWeight: 600,
             color: scrolled ? '#374151' : 'rgba(255,255,255,0.85)',
             textDecoration: 'none',
           }}>Giriş Yap</a>
-          <a href="/hr/register" style={{
+          <a href="/register" style={{
             fontSize: 14, fontWeight: 700,
             background: 'linear-gradient(135deg, #2563eb, #7c3aed)',
             color: 'white', padding: '8px 20px',
@@ -179,7 +179,7 @@ export default function Landing() {
           </p>
 
           <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 60 }}>
-            <a href="/hr/register" style={{
+            <a href="/register" style={{
               padding: '14px 32px',
               background: 'linear-gradient(135deg, #2563eb, #7c3aed)',
               color: 'white', borderRadius: 12, textDecoration: 'none',
@@ -329,7 +329,7 @@ export default function Landing() {
                 </div>
                 <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 24, lineHeight: 1.5 }}>{plan.desc}</p>
 
-                <a href="/hr/register" style={{
+                <a href="/register" style={{
                   display: 'block', textAlign: 'center',
                   padding: '12px',
                   background: plan.name === 'Professional' ? `linear-gradient(135deg, #2563eb, #7c3aed)` : 'transparent',
@@ -372,7 +372,7 @@ export default function Landing() {
         <p style={{ fontSize: 18, color: '#94a3b8', marginBottom: 32 }}>
           14 gün ücretsiz deneyin. Kredi kartı gerekmez.
         </p>
-        <a href="/hr/register" style={{
+        <a href="/register" style={{
           display: 'inline-block', padding: '16px 48px',
           background: 'linear-gradient(135deg, #2563eb, #7c3aed)',
           color: 'white', borderRadius: 12, textDecoration: 'none',
